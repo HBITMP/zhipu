@@ -2,6 +2,7 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
+    <h1 @click="goback">返回</h1>
     <ul>
       <li>
         <a
@@ -90,6 +91,11 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App'
     }
+  },
+  methods: {
+  	goback:function(){
+  		this.$router.goback();
+  	}
   }
 }
 </script>
