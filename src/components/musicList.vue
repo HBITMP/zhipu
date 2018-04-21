@@ -1,7 +1,7 @@
 <template>
 	<div class="music-list-box" ref="musicListBox" @click="maopao">
 		<ul class="music-content" ref="musicContent">
-			<li v-for="(item, index) in musicList" :key="item.id">
+			<li v-for="(item, index) in musicList" :key="item.id" @click="playClick(index)">
 				<div>
 					<swipeout class='music-swipout'>
 						<swipeout-item transition-mode="follow">
@@ -17,18 +17,26 @@
 					</swipeout>
 				</div>
 				<div>
-					<scroll-play :address="item.address"></scroll-play>
+					<scroll-play :address="item.address" 
+						:id="item.id" 
+						:ref="item.id"
+						:childaudio="myAudioContext"
+						:index="index"
+						></scroll-play>
 				</div>
 			</li>
 
 		</ul>
 		<div v-transfer-dom>
-			<confirm v-show="show" 
-				show-input=true 
-				:title="请输入新的名称" 
+			<confirm v-model="show" 
+				show-input
+				ref="rename"
+				title="请输入新的名称" 
 				:input-attrs="{type: 'string'}" 
-					
-				<!--@on-cancel="onCancel" @on-confirm="onConfirm" @on-show="onShow" @on-hide="onHide">-->
+				@on-cancel="onCancel" 
+				@on-confirm="onConfirm" 
+				@on-show="onShow" 
+				@on-hide="onHide">
 			</confirm>
 		</div>
 	</div>
@@ -58,7 +66,9 @@
 			return {
 				isactive: false,
 				num: 0,
-				show: false
+				changeIndex: 0,
+				show: false,
+				myAudioContext: null
 			}
 		},
 		computed: {
@@ -73,6 +83,7 @@
 			},
 			onButtonClick: function(type, index) {
 				console.log(type + "--" + index)
+				this.changeIndex = index;
 				if(type === 'dele') {
 					//删除歌曲的操作
 
@@ -81,6 +92,23 @@
 					this.show = true;
 					console.log(this.show)
 				}
+			},
+			onCancel: function(){},
+			onConfirm: function(value){
+				console.log(value)
+				 this.$store.dispatch("rename", {newName:value, index: this.changeIndex});
+			},
+			onShow: function(){
+				this.$refs.rename.setInputValue(this.musicList[this.changeIndex].name)
+			},
+			onHide: function(){},
+			playPause: function(){
+				
+			},
+			playClick: function(index){
+				//选中即将要播放的歌曲
+				this.$store.dispatch("setIndex", index)
+				console.log(this.$store.getters.getIndex)
 			},
 			maopao: function() {
 				console.log("z345678")
@@ -103,6 +131,10 @@
 			height: function() {
 				this.$refs.musicListBox.style.height = this.height + 'rem';
 			}
+		},
+		beforeMount: function(){
+			var audioText = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.msAudioContext;
+			this.myAudioContext = new audioText();
 		},
 		mounted: function() {
 

@@ -2,8 +2,8 @@
 	<div class="box">
 		<div class="header" ref="header">
 			<div class="btng">
-				<button class="btncss"><i class="iconfont icon-shuaxin"></i></button>
-				<button class="btncss" @click="clickplay"><i :class="play ? 'iconfont icon-bofang' : 'iconfont icon-zanting' "></i></button>
+				<button class="btncss" @click="clash"><i class="iconfont icon-shuaxin"></i></button>
+				<button class="btncss" @click="clickplay"><i :class="play ? 'iconfont icon-zanting' : 'iconfont icon-bofang' "></i></button>
 			</div>
 			<span>创作页面</span>
 			<button class="btncss">我的</button>
@@ -43,6 +43,7 @@
 <script>
 	import { MessageBox } from 'mint-ui';
 	import { AlertModule } from 'vux';
+	import { mapState } from 'vuex';
 	import Bscroll from 'better-scroll';
 	import MusicList from '../components/musicList';
 
@@ -51,9 +52,9 @@
 		name: 'CreatePage',
 		data() {
 			return {
-				play: true,
+//				play: true,
 				list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-				bodyHeight:0
+				bodyHeight:0,
 			}
 		},
 		components: {
@@ -72,18 +73,45 @@
 			getHeight: function () {
 				return (this.getClientHeight()-this.$refs.header.offsetHeight-this.$refs.footer.offsetHeight-this.$refs.topPart.offsetHeight) / 16;
 			},
+			clash: function(){
+				location.reload();
+			},
+			//点击播放按钮
 			clickplay: function() {
-				console.log(this.play)
-				console.log(this.getClientHeight())
-				console.log(this.getHeight())
-				this.play = !this.play;
-				
-				this.scroll.scrollTo(-120, 0, 3000)
+//				this.play = this.$store.getters.getIsPlaying;
+				var cindex = this.$store.getters.getIndex;
+				//判断当前是否在播放
+				if ( this.$store.getters.getIsPlaying ){
+					//正在播放，关闭原来正在播放的元素
+					this.musicList[this.$store.getters.getPlayIndex].wavesurfer.playPause();
+		
+					//判断是否是当前元素在播放
+					if ( !(this.$store.getters.getIndex == this.$store.getters.getPlayIndex) ) {
+						//设置停止播放元素
+						this.$store.dispatch("setPlayStop");
+						
+						//开启新的播放
+						this.musicList[cindex].wavesurfer.playPause();
+						console.log("原本是正在播放，关闭第"+this.$store.getters.getPlayIndex+'首歌曲的播放');
+
+						this.$store.dispatch('setPlaying', {index: cindex, isPlaying: true});
+						console.log("立刻重新开始第"+cindex+'首歌曲的播放');
+					} else {
+						//设置停止播放元素
+						this.$store.dispatch("setPlayStop");
+						console.log("关闭第"+this.$store.getters.getPlayIndex+'首歌曲的播放');
+					}
+				} else {
+					console.log("开启第"+cindex+"首歌曲的播放")
+					this.musicList[cindex].wavesurfer.playPause();
+					this.$store.dispatch('setPlaying', {index: cindex, isPlaying: true});
+				}
+//				this.scroll.scrollTo(-120, 0, 3000)
 			},
 		},
 		beforeMount: function() {
 			console.log("开始创建")
-
+			
 			//			AlertModule.show({
 			//				title: '提示',
 			//				content: "请将屏幕旋转至横屏",
@@ -95,6 +123,12 @@
 			//				}
 			//			})
 			
+		},
+		computed: {
+			...mapState({
+				musicList: state => state.music.musicInfo,
+				play: state => state.music.isPlaying
+			})
 		},
 		mounted:function  () {
 			this.bodyHeight = this.getHeight();
@@ -190,7 +224,7 @@
 	}
 	
 	.wrapper {
-		width: 30rem;
+		width: 31rem;
 		/*height: 2rem;*/
 		/*border: 1px solid red;*/
 		overflow: hidden;
