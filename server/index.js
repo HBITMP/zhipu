@@ -113,7 +113,20 @@ app.post('/createmusic', function(req, res){
 	res.json({
 		"status": 200,         //状态码
 		"message": "学习失败", //消息
-		"newMusic": true,
+		"newMusic": false,
 		"time": 12,
 	});
+})
+
+app.get('/getnewmusic', function(req, res){
+	res.json({
+		status: 200,         //状态码
+		newMusic: true,
+		music:{
+			id: "musicno1",
+			name: "中国1111111111111111111111111",
+			address: 'http://localhost:3000/123.mp3',
+			wavesurfer: null,
+		}
+	})
 })

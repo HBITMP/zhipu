@@ -3,12 +3,16 @@ const state = {
 	//横屏状态为true, 竖屏为false
 	isRow:false,
 	uploadUrl:'http://localhost:3000/upload',
+	audiotext: null,
 }
 
 //操作部分
 const mutations = {
 	setRow(state, data){
-		state.isRow = data.isRow
+		state.isRow = data.isRow;
+	},
+	setAudio(state, data){
+		state.audiotext = data.data;
 	}
 }
 
@@ -21,6 +25,12 @@ const actions = {
 		commit({
 			type: 'setRow',
 			isRow: isRow
+		})
+	},
+	setAudio({commit}, data){
+		commit({
+			type:'setAudio',
+			data: data
 		})
 	}
 }

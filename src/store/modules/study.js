@@ -3,7 +3,10 @@ import axios from 'axios';
 //数据部分
 const state = {
 	studyUrl: "http://localhost:3000/createmusic",
+	getNewMusicUrl: 'http://localhost:3000/getnewmusic',
 	isSuccess: false,
+	isNewMusic: false,
+	newMusic:{},
 	time:0,
 }
 
@@ -13,6 +16,15 @@ const mutations = {
 		state.isSuccess = data.isSuccess
 		state.time = data.time
 		console.log(state.isSuccess)
+	},
+	initStudy(state){
+		state.isSuccess = false;
+		state.time = 0;
+		state.isNewMusic = false;
+	},
+	getNewMusic(state, data){
+		state.newMusic = data.music;
+		state.isNewMusic = data.isNew;
 	}
 }
 
@@ -45,10 +57,37 @@ const actions = {
 			})
 		})
 	},
+	initStudy({commit}){
+		commit({
+			type: 'initStudy'
+		})
+	},
+	getNewMusic({commit}){
+		axios.get(state.getNewMusicUrl).then(function(response){
+			//获取到歌曲
+			if(response.data.newMusic){
+				commit({
+					type:'getNewMusic',
+					music: response.data.music,
+					isNew: response.data.newMusic
+				})
+			} else {
+				//没有获取到歌曲
+			}
+		}).catch(function(err){
+			
+		})
+	}
 }
 const getters = {  // getters
 	getIsSuccess(){
 		return state.isSuccess;
+	},
+	getIsNewMusic(){
+		return state.isNewMusic;
+	},
+	getNew(){
+		return state.newMusic;
 	}
 }
 

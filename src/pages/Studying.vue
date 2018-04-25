@@ -24,7 +24,8 @@
 		computed:{
 			...mapState({
 				time: state => state.study.time,
-				isSuccess: state => state.study.isSuccess
+				isSuccess: state => state.study.isSuccess,
+				isNewMusic: state => state.study.isNewMusic,
 			})
 		},
 		mounted: function(){
@@ -35,9 +36,8 @@
 					this.process += 100/this.time;
 					if(this.process >= 100){
 						this.process = 100;
-						clearInterval(this.timer)
-						this.text = "歌曲成功，正在跳转"
-						this.$router.push({ path: '/MusicFuse' })
+						clearInterval(this.timer);
+						this.$store.dispatch('getNewMusic');	
 					}
 				}
 				this.timer = window.setInterval(funct.bind(this),1000)
@@ -52,15 +52,22 @@
 						this.process += 100/this.time;
 						if(this.process >= 100){
 							this.process = 100;
-							clearInterval(this.timer)
-							this.text = "歌曲成功，正在跳转"
-							this.$router.push({ path: '/MusicFuse' })
+							clearInterval(this.timer);
+							this.$store.dispatch('getNewMusic');
 						}
 						console.log(this.process)
 					}
 					this.timer = setInterval(funct.bind(this),1000)
 				} else {
 					this.text = "正在提交数据"
+				}
+			},
+			isNewMusic: function(){
+				if(this.$store.getters.getIsNewMusic){
+					this.text = "歌曲生成成功，正在跳转"
+					this.$router.push({ path: '/MusicFuse' })
+				} else {
+					this.process = 0;
 				}
 			}
 		}

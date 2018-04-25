@@ -10,39 +10,102 @@
 			<div class="info-left">
 				<div>
 					<span>音乐名称</span>
-					<input type="text" />
+					<input type="text" v-model="musicName"/>
 				</div>
 				<div>
 					<span>备注</span>
-					<input type="text" />
+					<input type="text" v-model="musicOtherInfo"/>
 				</div>
 			</div>
 			<div class="info-right">
 				<button>生成</button>
-				<button>播放</button>
-				<button>保存</button>
+				<button @click="playMusic">{{playtext}}</button>
+				<button @click="saveMusic">保存</button>
 			</div>
 		</div>
-		<div class="wave-box"></div>
+		<div class="wave-box" id='newwave'></div>
+		 <div v-transfer-dom>
+      <confirm v-model="showSave"
+      title="提示信息"
+      @on-cancel="onCancel"
+      @on-confirm="onConfirm">
+        <p style="text-align:center;">歌曲保存成功，是否查看？</p>
+      </confirm>
+    </div>
 	</div>
 </template>
 
 <script>
-	import { XHeader,   } from 'vux';
+	import { XHeader, TransferDom,Confirm,  } from 'vux';
+	import { mapState, } from 'vuex';
+	import WaveSurfer from '../../static/js/wavesurfer.js';
+	
 	export default{
 		name: "MusicFuse",
+		directives: {
+    		TransferDom
+  		},
 		data(){
-			return {}
+			return {
+				wavesurfer: null,
+				newMusic: {},
+				playtext: '播放',
+				musicName: '',
+				musicOtherInfo: '',
+				showSave: false
+			}
 		},
-		components:{XHeader, },
+		components:{XHeader, Confirm, },
 		methods:{
+			onCancel: function(){},
+			onConfirm: function(){
+				this.$router.push({path:'/MyMusic'});
+			},
+			saveMusic: function(){
+				var data = this.$store.getters.getNew;
+				if( this.musicName != '' ){
+					data.name = this.musicName
+				}
+				data.other = this.musicOtherInfo
+				data.time = new Date();
+				this.$store.dispatch('addMyMusic',data)
+				this.showSave = true;
+			},
 			backCreate: function(){
 				this.$router.push({ path: '/CreatePage' })
 			},
 			clickMe: function(){
 				console.log("點擊了我得")
+				this.$router.push({path:'/MyMusic'})
+			},
+			playMusic: function(){
+				this.wavesurfer.playPause();
+				this.playtext = this.wavesurfer.isPlaying() ? "暂停" : "播放";
 			}
-		}
+		},
+		computed:{
+			...mapState({
+				audioText: state => state.win.audiotext,
+			})
+		},
+		mounted: function(){
+			console.log(this.audioText)
+			this.wavesurfer = WaveSurfer.create({
+				audioContext: this.audioText,
+				container: "#newwave",
+				waveColor: 'black',
+				progressColor: 'white',
+				cursorColor: 'white',
+				scrollParent: true,
+				height: 160,
+			});
+			function temp(dispatch){
+				dispatch("addLoad");
+			}
+			console.log("dasdadasasd")
+			console.log(this.$store.getters.getNew)
+			this.wavesurfer.load(this.$store.getters.getNew.address);
+		},
 	}
 </script>
 
@@ -95,6 +158,13 @@
 	}
 	.info-box >div{
 		flex: 1;
-		border: 1px solid red;
+		/*border: 1px solid red;*/
+	}
+	.wave-box{
+		margin-top: 2rem;
+		height: 10rem;
+		width: 100%;
+		background-color: #bababb;
+		/*border: 1px solid red;*/
 	}
 </style>

@@ -7,7 +7,7 @@
 				<button class="btncss" @click="clickplay"><i :class="play ? 'iconfont icon-zanting' : 'iconfont icon-bofang' "></i></button>
 			</div>
 			<span>创作页面</span>
-			<button class="btncss">我的</button>
+			<button class="btncss" @click="clickme">我的</button>
 		</div>
 		<div class="body">
 			<div class="top-part" ref="topPart">
@@ -115,6 +115,9 @@
 		    Radio
 		},
 		methods: {
+			clickme: function(){
+				this.$router.push({path:'/MyMusic'})
+			},
 			setDig:function(show, title){
 				console.log("触发显示时间")
 				this.showLoad = show;
@@ -177,7 +180,11 @@
 			},
 			//开始学习
 			startStudy: function(){
+				//初始化学习数据
+				this.$store.dispatch('initStudy');
+				//提交学习请求
 				this.$store.dispatch('StartStudy', this.musicList);
+				//页面跳转
 				this.$router.push({ path: '/StartStudy' })
 			},
 			//添加音乐

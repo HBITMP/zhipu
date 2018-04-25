@@ -139,6 +139,7 @@
 		beforeMount: function(){
 			var audioText = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.msAudioContext;
 			this.myAudioContext = new audioText();
+			this.$store.dispatch("setAudio", this.myAudioContext);
 		},
 		mounted: function() {
 

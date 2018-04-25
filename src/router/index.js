@@ -6,6 +6,7 @@ import StartCreate from '@/pages/StartCreate'
 import CreatePage from '@/pages/CreatePage'
 import Studying from '@/pages/Studying'
 import MusicFuse from '@/pages/MusicFuse'
+import MyMusic from '@/pages/MyMusic'
 
 Router.prototype.goback = function() {
 	this.isBack = true
@@ -38,6 +39,11 @@ export default new Router({
 			path: '/MusicFuse',
 			name: 'MusicFuse',
 			component: MusicFuse
+		},
+		{
+			path: '/MyMusic',
+			name: 'MyMusic',
+			component: MyMusic
 		}
 	]
 })
