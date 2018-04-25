@@ -1,8 +1,9 @@
 <template>
+	<keep-alive v-if="isRow">
 	<div class="box">
 		<div class="header" ref="header">
 			<div class="btng">
-				<button class="btncss" @click="clash"><i class="iconfont icon-shuaxin"></i></button>
+				<button class="btncss" @click="clash"><i class="iconfont icon-shuaxin" :class="isLoop?'loop':''"></i></button>
 				<button class="btncss" @click="clickplay"><i :class="play ? 'iconfont icon-zanting' : 'iconfont icon-bofang' "></i></button>
 			</div>
 			<span>创作页面</span>
@@ -11,7 +12,7 @@
 		<div class="body">
 			<div class="top-part" ref="topPart">
 				<div>
-					<button class="btncss">+</button>
+					<button class="btncss" @click="addMusic">+</button>
 				</div>
 				<div>
 					<div class="wrapper" ref="wrapper">
@@ -33,118 +34,239 @@
 		<div class="footer" ref="footer">
 			<div>
 				<button><i class="iconfont icon-iconset0174"></i></button>
-				<button>智能学习</button>
+				<button @click="startStudy">智能学习</button>
 			</div>
-			<input type="range" value="10" max="100" min="0" />
+			<input type="range" ref="volume" @change="setVolume" />
 		</div>
+		<div v-transfer-dom>
+      		<loading :show="showLoad" :text="textLoad"></loading>
+    	</div>
+    	<div v-transfer-dom>
+	      	<popup v-model="showSelect">
+		        <popup-header
+		        title="选择乐曲来源"
+		        :show-bottom-border='false'></popup-header>
+		       	<ul class="mui-table-view mui-table-view-radio">
+					<li class="mui-table-view-cell" @click="selSys">
+						<a class="mui-navigate-right">系统音乐</a>
+					</li>
+					<li class="mui-table-view-cell file-upload" @click="selLocal">
+						<a href='javascript:void(0);' class="blueButton">本地文件</a>
+						<input type="file" ref="fileUpload" accept=".mp3,.mid" @change="selFileChange"/>
+					</li>
+				</ul>
+		     </popup>
+    	</div>
+    	<div v-transfer-dom class="select-sys-music">
+	      	<confirm v-model="showSysMusicSelect"
+	      	title="系统音乐集"
+	      	@on-cancel="onCancel"
+	      	@on-confirm="onConfirm"
+	      	:hide-on-blur="true"
+	      	
+	      	>
+	        	<sys-music-list 
+	        		@showDig="setDig"
+	        		@on-confirm="onConfirm"
+	        		></sys-music-list>
+      		</confirm>
+    	</div>
+	</div>
+	</keep-alive>
+	<div v-else>
+		<p>请将屏幕旋转至横屏</p>
 	</div>
 </template>
 
 <script>
-	import { MessageBox } from 'mint-ui';
-	import { AlertModule } from 'vux';
+	import axios from 'axios';
+	import { Alert, TransferDom, Loading, Confirm, PopupHeader, Popup, Group, Radio } from 'vux';
 	import { mapState } from 'vuex';
 	import Bscroll from 'better-scroll';
 	import MusicList from '../components/musicList';
-
+	import SysMusicList from '../components/SysMusicList';
 
 	export default {
 		name: 'CreatePage',
+		directives: {
+			TransferDom
+		},
 		data() {
 			return {
-//				play: true,
+				//				play: true,
 				list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-				bodyHeight:0,
+				bodyHeight: 0,
+				textLoad:'音频解析中',
+				showLoad: true,
+				showSysMusicSelect:false,
+				showSelect: false,
+				selFile:"",
 			}
 		},
 		components: {
 			MusicList,
+			Alert,
+			Loading,
+			Confirm,
+			SysMusicList,
+			PopupHeader,
+			Popup,
+			Group,
+		    Radio
 		},
 		methods: {
-			getClientHeight: function() {
-				var clientHeight = 0;
-				if(document.body.clientHeight && document.documentElement.clientHeight) {
-					var clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
-				} else {
-					var clientHeight = (document.body.clientHeight > document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+			setDig:function(show, title){
+				console.log("触发显示时间")
+				this.showLoad = show;
+				this.textLoad = title;
+			},
+			selFileChange: function(){
+				var file = this.$refs.fileUpload.files[0];
+				var music;
+				//创建一个FormDate
+                var formData=new FormData();
+                //将文件信息追加到其中
+                formData.append('file',file);
+                //开始上传文件，提示文件上传中
+                this.$options.methods.setDig(true, "文件上传中");
+                var succFun = function(response){
+					if(response.status == 200){
+						console.log(response)
+						//文件上传成功
+						this.$options.methods.setDig(true, "正在解析音频");
+						var newm = {
+							id: response.data.result.id,
+							name: response.data.result.filename,
+							address: response.data.result.url,
+							wavesurfer: null,
+						};
+						this.$store.dispatch('addMusic',newm)
+					} else {
+						
+					}
 				}
-				return clientHeight;
+				axios.post(this.$store.getters.getUploadUrl,formData,{
+				}).then(succFun.bind(this)).catch(function(err){
+				  console.log(err);
+				});
 			},
-			getHeight: function () {
-				return (this.getClientHeight()-this.$refs.header.offsetHeight-this.$refs.footer.offsetHeight-this.$refs.topPart.offsetHeight) / 16;
+			onCancel: function(){},
+			onConfirm: function(){
+				console.log("触犯确定事件")
+				this.showSysMusicSelect = false;
 			},
-			clash: function(){
-				location.reload();
+			//选择系统音乐
+			selSys: function(){
+				this.showSelect = false;
+				this.showSysMusicSelect = true;
+				this.$store.dispatch('getSysMusic');
+			},
+			//选择本地音乐
+			selLocal: function(){
+				this.showSelect = false;		
+			},
+			//设置循环播放
+			clash: function() {
+				this.$store.dispatch("setLoop");
+			},
+			//设置音乐播放音量
+			setVolume:function(){
+				if(this.$store.getters.getPlayIndex >= 0){
+					this.musicList[this.$store.getters.getPlayIndex].wavesurfer.setVolume(this.$refs.volume.value/100)
+				}
+			},
+			//开始学习
+			startStudy: function(){
+				this.$store.dispatch('StartStudy', this.musicList);
+				this.$router.push({ path: '/StartStudy' })
+			},
+			//添加音乐
+			addMusic: function(){
+				console.log("添加音乐")
+//				this.showSysMusicSelect = true;
+				this.showSelect = true;
 			},
 			//点击播放按钮
 			clickplay: function() {
-//				this.play = this.$store.getters.getIsPlaying;
+				//				this.play = this.$store.getters.getIsPlaying;
 				var cindex = this.$store.getters.getIndex;
 				//判断当前是否在播放
-				if ( this.$store.getters.getIsPlaying ){
+				if(this.$store.getters.getIsPlaying) {
 					//正在播放，关闭原来正在播放的元素
 					this.musicList[this.$store.getters.getPlayIndex].wavesurfer.playPause();
-		
+
 					//判断是否是当前元素在播放
-					if ( !(this.$store.getters.getIndex == this.$store.getters.getPlayIndex) ) {
+					if(!(this.$store.getters.getIndex == this.$store.getters.getPlayIndex)) {
 						//设置停止播放元素
 						this.$store.dispatch("setPlayStop");
-						
+
 						//开启新的播放
 						this.musicList[cindex].wavesurfer.playPause();
-						console.log("原本是正在播放，关闭第"+this.$store.getters.getPlayIndex+'首歌曲的播放');
+						console.log("原本是正在播放，关闭第" + this.$store.getters.getPlayIndex + '首歌曲的播放');
 
-						this.$store.dispatch('setPlaying', {index: cindex, isPlaying: true});
-						console.log("立刻重新开始第"+cindex+'首歌曲的播放');
+						this.$store.dispatch('setPlaying', {
+							index: cindex,
+							isPlaying: true
+						});
+						console.log("立刻重新开始第" + cindex + '首歌曲的播放');
 					} else {
 						//设置停止播放元素
 						this.$store.dispatch("setPlayStop");
-						console.log("关闭第"+this.$store.getters.getPlayIndex+'首歌曲的播放');
+						console.log("关闭第" + this.$store.getters.getPlayIndex + '首歌曲的播放');
 					}
 				} else {
-					console.log("开启第"+cindex+"首歌曲的播放")
+					console.log("开启第" + cindex + "首歌曲的播放")
 					this.musicList[cindex].wavesurfer.playPause();
-					this.$store.dispatch('setPlaying', {index: cindex, isPlaying: true});
+					this.$store.dispatch('setPlaying', {
+						index: cindex,
+						isPlaying: true
+					});
 				}
-//				this.scroll.scrollTo(-120, 0, 3000)
+				//				this.scroll.scrollTo(-120, 0, 3000)
 			},
+			onHide: function() {},
 		},
 		beforeMount: function() {
-			console.log("开始创建")
-			
-			//			AlertModule.show({
-			//				title: '提示',
-			//				content: "请将屏幕旋转至横屏",
-			//				onShow() {
-			//					console.log('Module: I\'m showing')
-			//				},
-			//				onHide() {
-			//					console.log('Module: I\'m hiding now')
-			//				}
-			//			})
-			
+			console.log("开始创建");
 		},
 		computed: {
 			...mapState({
 				musicList: state => state.music.musicInfo,
-				play: state => state.music.isPlaying
+				play: state => state.music.isPlaying,
+				successLoad: state => state.music.successLoad,
+				isLoop: state => state.music.isLoop, 
+				isRow: state => state.win.isRow,
 			})
 		},
-		mounted:function  () {
-			this.bodyHeight = this.getHeight();
-			console.log("计算高度是："+this.bodyHeight)
+		mounted: function() {
+			//设施是否开始解析音乐
+			if (this.isRow){
+				this.showLoad=true;
+			} else {
+				this.showLoad=false;
+			}
 		},
 		created: function() {
-			this.$nextTick(() => {
-				this.scroll = new Bscroll(this.$refs.wrapper, {
-					startX: 0,
-					click: true,
-					scrollX: true,
-					scrollY: false,
-					eventPassthrough: 'vertical',
-//					disableTouch: true
-				});
-			})	
+			if (this.isRow){
+				this.$nextTick(() => {
+					this.scroll = new Bscroll(this.$refs.wrapper, {
+						startX: 0,
+						click: true,
+						scrollX: true,
+						scrollY: false,
+						eventPassthrough: 'vertical',
+						//					disableTouch: true
+					});
+				})
+			}
+		},
+		watch:{
+			successLoad: function(){
+//				console.log("解析成功"+this.successLoad);
+				if(this.successLoad >= this.musicList.length){
+					this.showLoad = false;
+				}
+			}
 		}
 
 	}
@@ -163,6 +285,7 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
+		width: 100%;
 	}
 	
 	.header {
@@ -182,7 +305,9 @@
 		/*指定垂直居中*/
 		color: white;
 	}
-	
+	.footer{
+		background-color: #494949;
+	}
 	.btncss,
 	.footer>div>button {
 		background-color: #343434;
@@ -224,7 +349,7 @@
 	}
 	
 	.wrapper {
-		width: 31rem;
+		width: 30rem;
 		/*height: 2rem;*/
 		/*border: 1px solid red;*/
 		overflow: hidden;
@@ -262,6 +387,7 @@
 	
 	.buttom-part {
 		width: 100%;
+		background-color: #272727;
 	}
 	
 	.footer {
@@ -285,5 +411,46 @@
 		height: 2rem;
 		color: white;
 		background-color: red;
+	}
+	.loop{
+		color: red;
+	}
+	.bottombox input{
+		display: none;
+	}
+	.blueButton{
+		position: absolute !important;
+		height: 40px !important;
+	}
+	.file-upload{
+		height: 40px !important;
+	}
+	.file-upload>input{
+		opacity: 0;
+		position: absolute;
+	}
+	/*骚操作0.0*/
+	.select-sys-music .weui-dialog{
+		max-width: 350px !important;
+	}
+	.select-sys-music .weui-dialog__ft{
+		display: none !important;
+	}
+	.select-sys-music .weui-dialog__title{
+		color: white;
+		border: 2px solid black;
+		padding: .6rem 2rem;
+		border-radius: 0.5rem;
+		font-size: 0.8rem;
+		
+	}
+	.select-sys-music .weui-dialog__hd{
+		margin-bottom: 9px;
+	}
+	.select-sys-music .weui-dialog{
+		background-color: #414141;	
+	}
+	.vux-popup-show{
+		overflow-y: hidden !important;	
 	}
 </style>

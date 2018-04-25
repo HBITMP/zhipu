@@ -38,12 +38,24 @@
 				waveColor: 'white',
 				progressColor: 'black',
 				cursorColor: 'white',
-//				scrollParent: true
 			});
+			function temp(dispatch){
+				dispatch("addLoad");
+			}
 			this.wavesurfer.load(this.address);
-			this.wavesurfer.on('finish', function(){
-				this.$store.dispatch("setPlayStop");
-			})
+			this.wavesurfer.on('ready',temp.bind(this, this.$store.dispatch));
+
+			function finishPlay(){
+				if( this.$store.getters.getIsLoop ){
+					this.wavesurfer.play(0);
+					
+				} else {
+					this.$store.dispatch("setPlayStop");
+				}
+				
+			}
+			this.wavesurfer.on('finish', finishPlay.bind(this));
+			
 			this.$store.dispatch('initWave', {index:this.index, wave: this.wavesurfer})
 		},
 		
@@ -57,7 +69,7 @@
 
 <style>
 .audiobox{
-	width: 31rem;
+	width: 30rem;
 	height: 3rem;
 	line-height: 3rem;
 	overflow: hidden;

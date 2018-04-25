@@ -4,7 +4,7 @@
 			<li v-for="(item, index) in musicList" :key="item.id" @click="playClick(index)">
 				<div>
 					<swipeout class='music-swipout'>
-						<swipeout-item transition-mode="follow">
+						<swipeout-item transition-mode="follow" :on-open="ItemOut(index)" :on-close="ItemClose(index)">
 							<div slot="right-menu">
 								<swipeout-button class="swipout-button" @click.native="onButtonClick('rename', index)" type="primary">重命名</swipeout-button>
 								<swipeout-button class="swipout-button" @click.native="onButtonClick('dele', index)" type="warn">删除</swipeout-button>
@@ -18,7 +18,7 @@
 				</div>
 				<div>
 					<scroll-play :address="item.address" 
-						:id="item.id" 
+						:id="list+index" 
 						:ref="item.id"
 						:childaudio="myAudioContext"
 						:index="index"
@@ -68,7 +68,9 @@
 				num: 0,
 				changeIndex: 0,
 				show: false,
-				myAudioContext: null
+				myAudioContext: null,
+				outIndex: -1,
+				list:'list'
 			}
 		},
 		computed: {
@@ -86,7 +88,7 @@
 				this.changeIndex = index;
 				if(type === 'dele') {
 					//删除歌曲的操作
-
+					this.$store.dispatch('dele', index)
 				} else {
 					//重命名歌曲的操作
 					this.show = true;
@@ -110,6 +112,8 @@
 				this.$store.dispatch("setIndex", index)
 				console.log(this.$store.getters.getIndex)
 			},
+			ItemOut: function(){},
+			ItemClose: function(){},
 			maopao: function() {
 				console.log("z345678")
 			}
@@ -123,14 +127,14 @@
 					click: true,
 					scrollX: false,
 					scrollY: true,
+					bounce: true,
+					scrollbar: {
+						fade: false,
+						interactive: false
+					},
 					eventPassthrough: 'horizontal',
 				});
 			})
-		},
-		watch: {
-			height: function() {
-				this.$refs.musicListBox.style.height = this.height + 'rem';
-			}
 		},
 		beforeMount: function(){
 			var audioText = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.msAudioContext;
@@ -144,7 +148,7 @@
 
 <style>
 	.music-list-box {
-		height: 10rem;
+		height: 16rem;
 		width: 100%;
 		overflow: hidden;
 	}
@@ -154,7 +158,7 @@
 		text-align: start;
 		margin: 0;
 		padding: 0;
-		height: 200rem;
+		height: 50rem;
 	}
 	
 	.music-content>li {
@@ -238,5 +242,18 @@
 	
 	.activemusic-context {
 		height: 100%;
+	}
+	.vux-loading .weui-toast {
+  		top: 50%;
+  		transform:  translateY(-50%);
+	}
+	.bscroll-vertical-scrollbar{
+		top: 89px !important;
+		bottom: 52px !important;
+	}
+	.bscroll-indicator{
+		background-color: white !important;
+		width: 4px !important;
+		right: 0 !important;
 	}
 </style>

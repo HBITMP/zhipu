@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 		<p>Welcome</p>
-		<router-link to='/CreatePage' class="link">开始作曲</router-link>
+		<router-link to="/CreatePage" class="link">开始作曲</router-link>
 	</div>
 </template>
 
@@ -45,6 +45,9 @@
 		.link{
 			top: -10rem;
 		}
+	}
+	a:active{
+		color:white;
 	}
 	
 </style>

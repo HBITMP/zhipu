@@ -1,54 +1,14 @@
 //数据部分
 const state = {
 	index:0,
-	playIndex: 0,
+	playIndex: -1,
 	isPlaying: false,
+	successLoad:0,
+	isLoop:false,
 	musicInfo: [{
 			id: "musicno1",
 			name: "中国1111111111111111111111111",
-			address: 'static/123.mp3',
-			wavesurfer: null,
-		},
-		{
-			id: "musicno2",
-			name: "中国",
-			address: 'static/123.mp3',
-			wavesurfer: null,
-		},
-		{
-			id: "musicno3",
-			name: "中国",
-			address: 'static/123.mp3',
-			wavesurfer: null,
-		},
-		{
-			id: "musicno4",
-			name: "中国",
-			address: 'static/123.mp3',
-			wavesurfer: null,
-		},
-		{
-			id: "musicno5",
-			name: "中国",
-			address: 'static/123.mp3',
-			wavesurfer: null,
-		},
-		{
-			id: "musicno6",
-			name: "中国",
-			address: 'static/123.mp3',
-			wavesurfer: null,
-		},
-		{
-			id: "musicno7",
-			name: "中国",
-			address: 'static/123.mp3',
-			wavesurfer: null,
-		},
-		{
-			id: "musicno8",
-			name: "中国",
-			address: 'static/123.mp3',
+			address: 'http://localhost:3000/123.mp3',
 			wavesurfer: null,
 		},
 	],
@@ -56,10 +16,10 @@ const state = {
 
 //操作部分
 const mutations = {
-	addMusic(state, payload) {
-		state.musicInfo = state.musicInfo.contact(payload.list)
+	addMusic(state, data) {
+		state.musicInfo.push(data.list)
 	},
-	dele(state, data){
+	deleByIndex(state, data){
 		//删除原数组中的数据
 		state.musicInfo.splice(data.index, 1)
 	},
@@ -79,6 +39,12 @@ const mutations = {
 	setPlayStop(state){
 		state.playIndex = -1;
 		state.isPlaying = false;
+	},
+	addLoad(state){
+		state.successLoad += 1;
+	},
+	setLoop(state){
+		state.isLoop = !state.isLoop;
 	}
 }
 
@@ -148,6 +114,16 @@ const actions = {
 		commit({
 			type: "setPlayStop"
 		})
+	},
+	addLoad({commit}){
+		commit({
+			type: 'addLoad'
+		})
+	},
+	setLoop({commit}){
+		commit({
+			type: "setLoop"
+		})
 	}
 }
 
@@ -156,10 +132,13 @@ const getters = {  // getters
             return state.index;
         },
         getPlayIndex: function(state){
-        		return state.playIndex;
+        	return state.playIndex;
         },
         getIsPlaying: function(state){
-        		return state.isPlaying
+        	return state.isPlaying
+        },
+        getIsLoop: function(){
+        	return state.isLoop
         }
     }
 

@@ -1,0 +1,9 @@
+{
+  "index.html": {
+    "resources": [
+      "static/js/mui.min.js",
+      "static/css/iconfont.css",
+      "static/css/mui.min.css"
+    ]
+  }
+}
