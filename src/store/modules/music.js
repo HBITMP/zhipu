@@ -5,12 +5,7 @@ const state = {
 	isPlaying: false,
 	successLoad:0,
 	isLoop:false,
-	musicInfo: [{
-			id: "musicno1",
-			name: "中国1111111111111111111111111",
-			address: 'http://localhost:3000/123.mp3',
-			wavesurfer: null,
-		},
+	musicInfo: [
 	],
 }
 

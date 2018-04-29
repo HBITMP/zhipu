@@ -1,5 +1,8 @@
 <template>
 	<div class="fuse-box">
+		<div v-transfer-dom>
+      		<loading :show="showLoad" :text="textLoad"></loading>
+    	</div>
 		<x-header :left-options="{backText: '',preventGoBack:true}" 
 			style="background-color:#3a3a3a;" 
 			@on-click-back="backCreate">
@@ -18,7 +21,7 @@
 				</div>
 			</div>
 			<div class="info-right">
-				<button>生成</button>
+				<button @click="clickCreate">生成</button>
 				<button @click="playMusic">{{playtext}}</button>
 				<button @click="saveMusic">保存</button>
 			</div>
@@ -36,14 +39,14 @@
 </template>
 
 <script>
-	import { XHeader, TransferDom,Confirm,  } from 'vux';
+	import { XHeader, TransferDom,Confirm, Loading } from 'vux';
 	import { mapState, } from 'vuex';
 	import WaveSurfer from '../../static/js/wavesurfer.js';
 	
 	export default{
 		name: "MusicFuse",
 		directives: {
-    		TransferDom
+    		TransferDom,
   		},
 		data(){
 			return {
@@ -52,10 +55,12 @@
 				playtext: '播放',
 				musicName: '',
 				musicOtherInfo: '',
-				showSave: false
+				showSave: false,
+				showLoad:false,
+				textLoad:"",
 			}
 		},
-		components:{XHeader, Confirm, },
+		components:{XHeader, Confirm, Loading},
 		methods:{
 			onCancel: function(){},
 			onConfirm: function(){
@@ -81,12 +86,22 @@
 			playMusic: function(){
 				this.wavesurfer.playPause();
 				this.playtext = this.wavesurfer.isPlaying() ? "暂停" : "播放";
+			},
+			clickCreate: function(){
+				this.showLoad = true;
+				this.textLoad = "正在生成音乐";
+				this.wavesurfer.load(this.$store.getters.getNew.address);
 			}
 		},
 		computed:{
 			...mapState({
 				audioText: state => state.win.audiotext,
 			})
+		},
+		beforeDestroy: function(){
+			if( this.wavesurfer.isPlaying() ){
+				this.wavesurfer.playPause();
+			}
 		},
 		mounted: function(){
 			console.log(this.audioText)
@@ -97,14 +112,17 @@
 				progressColor: 'white',
 				cursorColor: 'white',
 				scrollParent: true,
+				normalize:true,
 				height: 160,
+				barHeight:6,
+//				barWidth:2,
 			});
-			function temp(dispatch){
-				dispatch("addLoad");
-			}
-			console.log("dasdadasasd")
 			console.log(this.$store.getters.getNew)
-			this.wavesurfer.load(this.$store.getters.getNew.address);
+			
+			var ready = function(){
+				this.showLoad = false;
+			}
+			this.wavesurfer.on("ready", ready.bind(this))
 		},
 	}
 </script>
@@ -138,8 +156,8 @@
 	.info-left>div>span{
 		display: inline-block;
 		width: 5rem;
-		color: black;
-		font-weight: 600;
+		color: white;
+		font-weight: 500;
 		vertical-align: middle;
 	}
 	.info-left input{

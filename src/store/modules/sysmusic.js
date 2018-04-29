@@ -1,7 +1,7 @@
 import axios from 'axios';
 //数据部分
 const state = {
-	getSysUrl:'http://localhost:3000/system/musics',
+	getSysUrl:'http://123.207.24.223:3000/system/musics',
 	status: false,
 	message: '',
 	catelog: []

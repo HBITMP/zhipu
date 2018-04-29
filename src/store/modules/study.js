@@ -2,8 +2,8 @@ import axios from 'axios';
 
 //数据部分
 const state = {
-	studyUrl: "http://localhost:3000/createmusic",
-	getNewMusicUrl: 'http://localhost:3000/getnewmusic',
+	studyUrl: "http://123.207.24.223:3000/createmusic",
+	getNewMusicUrl: 'http://123.207.24.223:3000/getnewmusic',
 	isSuccess: false,
 	isNewMusic: false,
 	newMusic:{},

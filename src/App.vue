@@ -21,13 +21,13 @@ export default {
 				},
 				false
 			);
-			self.$store.dispatch('setRow', true)
+//			self.$store.dispatch('setRow', true)
 			//这段代码用来实现初始化相关数据
-//			if(window.orientation == 90 || window.orientation == -90){
-//				self.$store.dispatch('setRow', true)
-//			} else {
-//				self.$store.dispatch('setRow', false)
-//			}
+			if(window.orientation == 90 || window.orientation == -90){
+				self.$store.dispatch('setRow', true)
+			} else {
+				self.$store.dispatch('setRow', false)
+			}
 	}
 }
 </script>

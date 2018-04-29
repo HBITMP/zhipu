@@ -70,38 +70,56 @@ app.get('/system/musics', function(req, res){
 		catelog: [{
 			type:1,
 			id:'00000001',
-			name:'1224',
-			address:'http://localhost:3000/123.mp3',
+			name:'generated_chord_0.mp3',
+			address:'http://123.207.24.223:3000/generated_chord_0.mp3',
 		},
 		{
 			type:1,
 			id:'00000002',
-			name:'123123',
-			address:'http://localhost:3000/123.mp3',
+			name:'generated_chord_1.mp3',
+			address:'http://123.207.24.223:3000/generated_chord_1.mp3',
 		},
 		{
 			type:1,
 			id:'00000003',
-			name:'12312',
-			address:'http://localhost:3000/123.mp3',
+			name:'generated_chord_2.mp3',
+			address:'http://123.207.24.223:3000/generated_chord_2.mp3',
 		},
 		{
 			type:1,
 			id:'00000004',
-			name:'asdas',
-			address:'http://localhost:3000/123.mp3',
+			name:'generated_chord_3.mp3',
+			address:'http://123.207.24.223:3000/generated_chord_3.mp3',
 		},
 		{
 			type:1,
 			id:'00000005',
-			name:'asdasd',
-			address:'http://localhost:3000/123.mp3',
+			name:'generated_chord_4.mp3',
+			address:'http://123.207.24.223:3000/generated_chord_4.mp3',
 		},
 		{
 			type:1,
 			id:'00000006',
-			name:'zczx',
-			address:'http://localhost:3000/123.mp3',
+			name:'generated_chord_5.mp3',
+			address:'http://123.207.24.223:3000/generated_chord_5.mp3',
+		},
+		{
+			type:1,
+			id:'00000007',
+			name:'generated_chord_6.mp3',
+			address:'http://123.207.24.223:3000/generated_chord_6.mp3',
+		},
+		{
+			type:1,
+			id:'00000008',
+			name:'generated_chord_7.mp3',
+			address:'http://123.207.24.223:3000/generated_chord_7.mp3',
+		},
+		{
+			type:1,
+			id:'00000009',
+			name:'generated_chord_8.mp3',
+			address:'http://123.207.24.223:3000/generated_chord_8.mp3',
 		},
 		
 		]
@@ -124,8 +142,8 @@ app.get('/getnewmusic', function(req, res){
 		newMusic: true,
 		music:{
 			id: "musicno1",
-			name: "中国1111111111111111111111111",
-			address: 'http://localhost:3000/123.mp3',
+			name: "final.mp3",
+			address: 'http://123.207.24.223:3000/final.mp3',
 			wavesurfer: null,
 		}
 	})

@@ -38,6 +38,10 @@
 				waveColor: 'white',
 				progressColor: 'black',
 				cursorColor: 'white',
+				barHeight:6,
+				normalize:true,
+				barWidth:2,
+				height:48,
 			});
 			function temp(dispatch){
 				dispatch("addLoad");
@@ -58,7 +62,11 @@
 			
 			this.$store.dispatch('initWave', {index:this.index, wave: this.wavesurfer})
 		},
-		
+		beforeDestroy: function(){
+			if( this.wavesurfer.isPlaying() ){
+				this.wavesurfer.playPause();
+			}
+		},
 		methods:{
 			playPause: function(){
 				this.wavesurfer.playPause()

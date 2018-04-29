@@ -50,8 +50,9 @@
 					<li class="mui-table-view-cell" @click="selSys">
 						<a class="mui-navigate-right">系统音乐</a>
 					</li>
-					<li class="mui-table-view-cell file-upload" @click="selLocal">
-						<a href='javascript:void(0);' class="blueButton">本地文件</a>
+					<!--@click="selLocal"-->
+					<li class="mui-table-view-cell file-upload" @click="selLocal" >
+						<!--<a href='javascript:void(0);' class="blueButton">本地文件</a>-->
 						<input type="file" ref="fileUpload" accept=".mp3,.mid" @change="selFileChange"/>
 					</li>
 				</ul>
@@ -74,7 +75,7 @@
 	</div>
 	</keep-alive>
 	<div v-else>
-		<p>请将屏幕旋转至横屏</p>
+		<p style="text-align: center;">请将屏幕旋转至横屏</p>
 	</div>
 </template>
 
@@ -120,10 +121,11 @@
 			},
 			setDig:function(show, title){
 				console.log("触发显示时间")
-				this.showLoad = show;
+				this.showLoad = true;
 				this.textLoad = title;
 			},
 			selFileChange: function(){
+//				this.showSelect = false;
 				var file = this.$refs.fileUpload.files[0];
 				var music;
 				//创建一个FormDate
@@ -131,12 +133,14 @@
                 //将文件信息追加到其中
                 formData.append('file',file);
                 //开始上传文件，提示文件上传中
-                this.$options.methods.setDig(true, "文件上传中");
+				this.showLoad = true;
+				this.textLoad = "文件上传中";
                 var succFun = function(response){
 					if(response.status == 200){
 						console.log(response)
 						//文件上传成功
-						this.$options.methods.setDig(true, "正在解析音频");
+						this.showLoad = true;
+						this.textLoad = "正在解析音频";
 						var newm = {
 							id: response.data.result.id,
 							name: response.data.result.filename,
@@ -247,8 +251,11 @@
 		},
 		mounted: function() {
 			//设施是否开始解析音乐
-			if (this.isRow){
+			if (this.isRow && this.musicList.length > 0){
 				this.showLoad=true;
+//				if (this.MusicList.length <= 0){
+//					this.showLoad=f;
+//				}
 			} else {
 				this.showLoad=false;
 			}
@@ -267,13 +274,14 @@
 				})
 			}
 		},
+		
 		watch:{
 			successLoad: function(){
 //				console.log("解析成功"+this.successLoad);
 				if(this.successLoad >= this.musicList.length){
 					this.showLoad = false;
 				}
-			}
+			},
 		}
 
 	}
@@ -429,13 +437,13 @@
 		position: absolute !important;
 		height: 40px !important;
 	}
-	.file-upload{
+	/*.file-upload{
 		height: 40px !important;
 	}
 	.file-upload>input{
 		opacity: 0;
 		position: absolute;
-	}
+	}*/
 	/*骚操作0.0*/
 	.select-sys-music .weui-dialog{
 		max-width: 350px !important;

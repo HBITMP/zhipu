@@ -2,7 +2,7 @@
 const state = {
 	//横屏状态为true, 竖屏为false
 	isRow:false,
-	uploadUrl:'http://localhost:3000/upload',
+	uploadUrl:'http://123.207.24.223:3000/upload',
 	audiotext: null,
 }
 
