@@ -20,15 +20,15 @@
 		computed: {
 		},
 		created: function(){
-			this.$nextTick(() => {
-				this.scroll = new Bscroll(this.$refs.audiobox, {
-					startX: 0,
-					click: true,
-					scrollX: true,
-					scrollY: false,
-					eventPassthrough: 'vertical'
-				});
-			})	
+//			this.$nextTick(() => {
+//				this.scroll = new Bscroll(this.$refs.audiobox, {
+//					startX: 0,
+//					click: true,
+//					scrollX: true,
+//					scrollY: false,
+//					eventPassthrough: 'vertical'
+//				});
+//			})	
 		},
 		
 		mounted: function(){
@@ -39,6 +39,7 @@
 				progressColor: 'black',
 				cursorColor: 'white',
 				barHeight:6,
+				scrollParent: true,
 				normalize:true,
 				barWidth:2,
 				height:48,
@@ -76,14 +77,14 @@
 </script>
 
 <style>
-.audiobox{
+/*.audiobox{
 	width: 30rem;
 	height: 3rem;
 	line-height: 3rem;
 	overflow: hidden;
-}
+}*/
 .audiocontent{
-	width: 100rem;
+	/*width: 100rem;*/
 	overflow: hidden;
 	height: 3rem;
 }

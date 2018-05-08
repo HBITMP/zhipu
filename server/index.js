@@ -64,6 +64,24 @@ app.post('/upload', upload.single('file'), function (req, res) {
 	});
 });
 
+app.post('/user/login', function(req, res){
+console.log(req.body)
+	res.json({
+		username:"12313",
+		userid:'1231231',
+		message:'success',
+		status:200,
+	})
+});
+
+app.post('/user/register', function(req, res){
+	console.log(req.body)
+	res.json({
+		status:200,
+		message: "123456",
+	})
+})
+
 
 app.get('/system/musics', function(req, res){
 	res.json({

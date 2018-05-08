@@ -6,7 +6,9 @@
 		<x-header :left-options="{backText: '',preventGoBack:true}" 
 			style="background-color:#3a3a3a;" 
 			@on-click-back="backCreate">
-			<span slot="default">智能融合</span>
+			<span slot="default" class="title"><img src="../assets/music.png" style="width: 1.5rem; height: 1.5rem; margin-right: 1rem;" />
+			<span>智能融合</span>
+			</span>
 			<button class="mebtn" slot='right' @click="clickMe">我的</button>
 		</x-header>
 		<div class="info-box">
@@ -104,6 +106,19 @@
 			}
 		},
 		mounted: function(){
+			function pludReady() {
+				var onback = function(){
+					this.$router.push({
+						path: '/CreatePage'
+					})
+				}
+				plus.key.addEventListener("backbutton",onback.bind(this));
+			}
+			if(window.plus) {
+				pludReady().bind(this);
+			} else {
+				document.addEventListener("plusready", pludReady.bind(this), 'false');
+			}
 			console.log(this.audioText)
 			this.wavesurfer = WaveSurfer.create({
 				audioContext: this.audioText,
@@ -128,6 +143,14 @@
 </script>
 
 <style>
+	.title{
+		color: rgb(238,208,206);
+		font-size: 1.2rem;
+		font-family: fzytk;	
+	}
+	.title>img, .title>span{
+		vertical-align: middle;
+	}
 	.fuse-box{
 		width: 100% !important;
 		background-color: #3a3a3a;
@@ -140,8 +163,11 @@
 	}
 	.mebtn{
 		border: 0;
-		background: #a0a0a0;
-		color: white !important;
+		background: rgb(238,208,206);
+		color: black !important;
+		font-family: fzytk;	
+		border-radius:  .6rem;
+		padding: 6px 1rem;
 	}
 	.info-box{
 		display: flex;
@@ -156,9 +182,10 @@
 	.info-left>div>span{
 		display: inline-block;
 		width: 5rem;
-		color: white;
-		font-weight: 500;
+		color: rgb(238,208,206);
+		font-weight: 700;
 		vertical-align: middle;
+		font-family: fzytk;	
 	}
 	.info-left input{
 		width: 13rem;
@@ -166,13 +193,15 @@
 		display: inline-block;
 		margin: .3rem;
 		border-radius: 0;
-		background-color: #a0a0a0;
+		background-color: rgb(238,208,206);
 	}
 	.info-right>button{
 		border: 0;
-		background-color: #9f9f9f;
+		background-color: rgb(238,208,206);
 		color: black;
 		margin-left: 2rem;
+		font-family: fzytk;	
+		border-radius: .7rem;
 	}
 	.info-box >div{
 		flex: 1;
@@ -184,5 +213,12 @@
 		width: 100%;
 		background-color: #bababb;
 		/*border: 1px solid red;*/
+	}
+	.left-arrow:before{
+		border-color: rgb(238,208,206) !important;
+	}
+	.vux-loading .weui-toast {
+  		top: 50% !important;
+  		transform: translateX(-50%) translateY(-50%) !important;;
 	}
 </style>

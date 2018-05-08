@@ -1,13 +1,46 @@
 <template>
 	<div class="container">
 		<p>Welcome</p>
-		<router-link to="/CreatePage" class="link">开始作曲</router-link>
+		<div @click="clickTurn"  class="link">开始作曲</div>
 	</div>
 </template>
 
 <script>
+	import { mapState } from 'vuex';
+	
 	export default {
 		name:'StartCreate',
+		computed: {
+			...mapState({
+				loginStatus : state  => state.user.loginStatus,
+			})
+		},
+		mounted: function()	{
+			
+			this.$store.dispatch("loadStroge");
+			function pludReady() {
+				plus.navigator.setFullscreen(false);
+				plus.screen.lockOrientation("portrait-primary");
+			}
+			if(window.plus) {
+				pludReady();
+			} else {
+				document.addEventListener("plusready", pludReady, 'false');
+			}
+		},
+		methods: {
+			clickTurn: function(){
+				if(this.loginStatus){
+					this.$router.push({
+					path: '/CreatePage'
+				})
+				} else {
+					this.$router.push({
+					path: '/Login'
+				})
+				}
+			}
+		}
 	}
 </script>
 
