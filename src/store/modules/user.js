@@ -27,6 +27,8 @@ const mutations = {
 		state.registerStatus = data.status;
 	},
 	logout(state, data){
+		state.loginStatus = false;
+		state.registerStatus = false;
 		localStorage.clear();
 	}
 }

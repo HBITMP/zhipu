@@ -85,62 +85,190 @@ app.post('/user/register', function(req, res){
 
 app.get('/system/musics', function(req, res){
 	res.json({
-		catelog: [{
-			type:1,
-			id:'00000001',
-			name:'generated_chord_0.mp3',
-			address:'http://123.207.24.223:3000/generated_chord_0.mp3',
+		catelog:[
+		{
+			type:'1', //风格编号 
+		    name: "古典", //风格名
+			catelog: [{
+						type:1,
+						id:'00000001',
+						name:'generated_chord_0.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_0.mp3',
+					},
+					{
+						type:1,
+						id:'00000002',
+						name:'generated_chord_1.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_1.mp3',
+					},
+					{
+						type:1,
+						id:'00000003',
+						name:'generated_chord_2.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_2.mp3',
+					},
+					{
+						type:1,
+						id:'00000004',
+						name:'generated_chord_3.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_3.mp3',
+					},
+					{
+						type:1,
+						id:'00000005',
+						name:'generated_chord_4.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_4.mp3',
+					},
+					{
+						type:1,
+						id:'00000006',
+						name:'generated_chord_5.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_5.mp3',
+					},
+					{
+						type:1,
+						id:'00000007',
+						name:'generated_chord_6.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_6.mp3',
+					},
+					{
+						type:1,
+						id:'00000008',
+						name:'generated_chord_7.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_7.mp3',
+					},
+					{
+						type:1,
+						id:'00000009',
+						name:'generated_chord_8.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_8.mp3',
+					},
+					
+				]
 		},
 		{
-			type:1,
-			id:'00000002',
-			name:'generated_chord_1.mp3',
-			address:'http://123.207.24.223:3000/generated_chord_1.mp3',
+			type:'2', //风格编号 
+		    name: "古典", //风格名
+			catelog: [{
+						type:1,
+						id:'00000001',
+						name:'generated_chord_0.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_0.mp3',
+					},
+					{
+						type:1,
+						id:'00000002',
+						name:'generated_chord_1.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_1.mp3',
+					},
+					{
+						type:1,
+						id:'00000003',
+						name:'generated_chord_2.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_2.mp3',
+					},
+					{
+						type:1,
+						id:'00000004',
+						name:'generated_chord_3.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_3.mp3',
+					},
+					{
+						type:1,
+						id:'00000005',
+						name:'generated_chord_4.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_4.mp3',
+					},
+					{
+						type:1,
+						id:'00000006',
+						name:'generated_chord_5.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_5.mp3',
+					},
+					{
+						type:1,
+						id:'00000007',
+						name:'generated_chord_6.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_6.mp3',
+					},
+					{
+						type:1,
+						id:'00000008',
+						name:'generated_chord_7.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_7.mp3',
+					},
+					{
+						type:1,
+						id:'00000009',
+						name:'generated_chord_8.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_8.mp3',
+					},
+					
+				]
 		},
 		{
-			type:1,
-			id:'00000003',
-			name:'generated_chord_2.mp3',
-			address:'http://123.207.24.223:3000/generated_chord_2.mp3',
+			type:'3', //风格编号 
+		    name: "古典", //风格名
+			catelog: [{
+						type:1,
+						id:'00000001',
+						name:'generated_chord_0.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_0.mp3',
+					},
+					{
+						type:1,
+						id:'00000002',
+						name:'generated_chord_1.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_1.mp3',
+					},
+					{
+						type:1,
+						id:'00000003',
+						name:'generated_chord_2.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_2.mp3',
+					},
+					{
+						type:1,
+						id:'00000004',
+						name:'generated_chord_3.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_3.mp3',
+					},
+					{
+						type:1,
+						id:'00000005',
+						name:'generated_chord_4.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_4.mp3',
+					},
+					{
+						type:1,
+						id:'00000006',
+						name:'generated_chord_5.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_5.mp3',
+					},
+					{
+						type:1,
+						id:'00000007',
+						name:'generated_chord_6.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_6.mp3',
+					},
+					{
+						type:1,
+						id:'00000008',
+						name:'generated_chord_7.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_7.mp3',
+					},
+					{
+						type:1,
+						id:'00000009',
+						name:'generated_chord_8.mp3',
+						address:'http://123.207.24.223:3000/generated_chord_8.mp3',
+					},
+					
+				]
 		},
-		{
-			type:1,
-			id:'00000004',
-			name:'generated_chord_3.mp3',
-			address:'http://123.207.24.223:3000/generated_chord_3.mp3',
-		},
-		{
-			type:1,
-			id:'00000005',
-			name:'generated_chord_4.mp3',
-			address:'http://123.207.24.223:3000/generated_chord_4.mp3',
-		},
-		{
-			type:1,
-			id:'00000006',
-			name:'generated_chord_5.mp3',
-			address:'http://123.207.24.223:3000/generated_chord_5.mp3',
-		},
-		{
-			type:1,
-			id:'00000007',
-			name:'generated_chord_6.mp3',
-			address:'http://123.207.24.223:3000/generated_chord_6.mp3',
-		},
-		{
-			type:1,
-			id:'00000008',
-			name:'generated_chord_7.mp3',
-			address:'http://123.207.24.223:3000/generated_chord_7.mp3',
-		},
-		{
-			type:1,
-			id:'00000009',
-			name:'generated_chord_8.mp3',
-			address:'http://123.207.24.223:3000/generated_chord_8.mp3',
-		},
-		
 		]
+		
+		
 	})
 })
 

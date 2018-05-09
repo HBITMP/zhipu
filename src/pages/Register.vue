@@ -47,6 +47,14 @@
 				plus.navigator.setFullscreen(false);
 				plus.screen.lockOrientation("portrait-primary");
 			}
+			var onback = function(){
+//				console.log("返回到开始页面");
+					this.$router.push({
+						path: '/Login'
+					})
+				}
+			plus.key.removeEventListener("backbutton", onback);
+			plus.key.addEventListener("backbutton",onback.bind(this));
 			if(window.plus) {
 				plusReady();
 			} else {

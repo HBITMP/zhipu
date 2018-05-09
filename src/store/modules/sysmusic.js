@@ -4,19 +4,26 @@ const state = {
 	getSysUrl:'http://123.207.24.223:3000/system/musics',
 	status: false,
 	message: '',
+	SelectStyle:-1,
 	catelog: []
 }
+
 
 //操作部分
 const mutations = {
 	setCate(state, data){
 		state.catelog = data.cate;
 		state.status = data.status;
+		state.SelectStyle = 0;
 		console.log(state.catelog)
 	},
 	setErr(state, data){
 		state.status = data.status;
 		state.message = data.message;
+	},
+	setSelectStyle(state, data){
+		state.SelectStyle = data.index;
+		console.log("change："+state.SelectStyle)
 	}
 }
 
@@ -40,13 +47,26 @@ const actions = {
 				message: '网络错误'
 			})
 		});
+	},
+	setSelectStyle({commit}, index){
+		console.log("commit："+index)
+		commit({
+			type: "setSelectStyle",
+			index: index,
+		})
 	}
 }
 
+const getters = {  // getters
+    getNowMusicList: function (state) {
+        return state.catelog[state.SelectStyle].catelog;
+    },
+}
 
 
 export default {
 	state,
 	mutations,
 	actions,
+	getters,
 }

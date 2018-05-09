@@ -106,19 +106,14 @@
 			}
 		},
 		mounted: function(){
-			function pludReady() {
-				var onback = function(){
+			var onback = function(){
+//				console.log("返回到开始页面");
 					this.$router.push({
 						path: '/CreatePage'
 					})
 				}
-				plus.key.addEventListener("backbutton",onback.bind(this));
-			}
-			if(window.plus) {
-				pludReady().bind(this);
-			} else {
-				document.addEventListener("plusready", pludReady.bind(this), 'false');
-			}
+			plus.key.removeEventListener("backbutton", onback);
+			plus.key.addEventListener("backbutton",onback.bind(this));
 			console.log(this.audioText)
 			this.wavesurfer = WaveSurfer.create({
 				audioContext: this.audioText,

@@ -26,6 +26,7 @@
 						</div>
 					</div>
 				</div>
+				<!--<input type="file" ref="fileUpload" @click="clickInput" @change="selFileChange" />-->
 				<div class="buttom-part">
 					<music-list :height="bodyHeight"></music-list>
 				</div>
@@ -43,15 +44,19 @@
 			</div>
 			<div v-transfer-dom>
 				<popup v-model="showSelect">
-					<popup-header title="选择乐曲来源" :show-bottom-border='false'></popup-header>
+					<popup-header 
+					left-text="取消"
+        			right-text="确认"  
+        			title="选择乐曲来源" 
+        			:show-bottom-border='false'></popup-header>
 					<ul class="mui-table-view mui-table-view-radio">
 						<li class="mui-table-view-cell" @click="selSys">
 							<a class="mui-navigate-right">系统音乐</a>
 						</li>
 						<!--@click="selLocal"-->
 						<li class="mui-table-view-cell file-upload" @click="selLocal">
-							<!--<a href='javascript:void(0);' class="blueButton">本地文件</a>-->
-							<input type="file" ref="fileUpload" accept=".mp3,.mid" @change="selFileChange" />
+							<a href='javascript:void(0);' class="mui-navigate-right blueButton">本地文件</a>
+							<input style="opacity: 0;" type="file" ref="fileUpload" @click="clickInput" @change="selFileChange" />
 						</li>
 					</ul>
 				</popup>
@@ -160,7 +165,11 @@
 			},
 			//选择本地音乐
 			selLocal: function() {
+				console.log('点击了li')
 				this.showSelect = false;
+			},
+			clickInput: function(){
+				console.log('点击了input')
 			},
 			//设置循环播放
 			clash: function() {
@@ -243,17 +252,19 @@
 		},
 		mounted: function() {
 			function pludReady() {
-				var onback = function(){
+				plus.navigator.setFullscreen(true);
+				plus.screen.lockOrientation("landscape-primary");
+			}
+			var onback = function(){
+				console.log("返回到开始页面");
 					this.$router.push({
 						path: '/StartCreate'
 					})
 				}
-				plus.key.addEventListener("backbutton",onback.bind(this));
-				plus.navigator.setFullscreen(true);
-				plus.screen.lockOrientation("landscape-primary");
-			}
+//			plus.key.removeEventListener("backbutton", onback);
+//			plus.key.addEventListener("backbutton",onback.bind(this));	
 			if(window.plus) {
-				pludReady().bind(this);
+				pludReady();
 			} else {
 				document.addEventListener("plusready", pludReady.bind(this), 'false');
 			}
@@ -509,6 +520,7 @@
 	.blueButton {
 		position: absolute !important;
 		height: 40px !important;
+		width: 99%;
 	}
 	/*.file-upload{
 		height: 40px !important;
@@ -549,5 +561,8 @@
 	.vux-loading .weui-toast {
   		top: 50% !important;
   		transform: translateX(-50%) translateY(-50%) !important;;
+	}
+	.vux-popup-header-right{
+		color: rgb(238, 208, 206) !important;
 	}
 </style>

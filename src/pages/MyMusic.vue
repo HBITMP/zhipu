@@ -38,8 +38,8 @@
 			<div id="mywave"></div>
 		</div>
 		<div v-transfer-dom>
-      <alert v-model="showdown" title="下载状态提示" :content="downtext"></alert>
-    </div>
+      		<loading :show="showdown" :text="downtext"></loading>
+    	</div>
 	</div>
 </template>
 
@@ -87,19 +87,14 @@
 			}
 		},
 		mounted: function() {
-			function pludReady() {
-				var onback = function(){
-					this.$router.push({
-						path: '/CreatePage'
-					})
-				}
-				plus.key.addEventListener("backbutton",onback.bind(this));
+			var onback = function(){
+				console.log("返回到在创作页面");
+				this.$router.push({
+					path: '/CreatePage'
+				})
 			}
-			if(window.plus) {
-				pludReady().bind(this);
-			} else {
-				document.addEventListener("plusready", pludReady.bind(this), 'false');
-			}
+			plus.key.removeEventListener("backbutton", onback);
+			plus.key.addEventListener("backbutton",onback.bind(this));
 			this.wavesurfer = WaveSurfer.create({
 				audioContext: this.audioText,
 				container: "#mywave",
@@ -137,6 +132,10 @@
 						console.log("Download failed: " + status);
 						this.downtext = "下载失败，请检查网络";
 					}
+					var temp  = function(){
+						this.showdown = false;
+					}
+					setTimeout(temp.bind(this), 2000)
 				}.bind(this));
 				//dtask.addEventListener( "statechanged", onStateChanged, false );
 				dtask.start();

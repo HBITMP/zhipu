@@ -48,17 +48,21 @@
 		},
 		mounted: function() {
 			function plusReady() {
-				var onback = function(){
-					this.$router.push({
-						path: '/StartCreate'
-					})
-				}
-				plus.key.addEventListener("backbutton",onback.bind(this));
+				
 				plus.navigator.setStatusBarStyle( "light" );
 				// 设置系统状态栏背景为红色
 				plus.navigator.setFullscreen(false);
 				plus.screen.lockOrientation("portrait-primary");
 			}
+			var onback = function(){
+				console.log("返回到在开始创作页面");
+					this.$router.push({
+						path: '/StartCreate'
+					})
+				}
+			console.log("返回到在创作页面");
+			plus.key.removeEventListener("backbutton", onback);
+			plus.key.addEventListener("backbutton",onback.bind(this));
 			if(window.plus) {
 				plusReady();
 			} else {
