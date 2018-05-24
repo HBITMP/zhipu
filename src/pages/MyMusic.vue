@@ -23,7 +23,7 @@
 						</div>
 						<div slot="content" class="my-header my-list">
 							<span>{{item.name}}</span>
-							<span>{{item.time}}</span>
+							<span>90s</span>
 							<span>{{item.other}}</span>
 						</div>
 					</swipeout-item>
@@ -93,6 +93,10 @@
 					path: '/CreatePage'
 				})
 			}
+			
+			if(this.myMusicList.length == 0){
+				this.$store.dispatch("getMusicList");
+			}
 			plus.key.removeEventListener("backbutton", onback);
 			plus.key.addEventListener("backbutton",onback.bind(this));
 			this.wavesurfer = WaveSurfer.create({
@@ -114,7 +118,8 @@
 			console.log(this.$store.getters.getNew)
 			if(this.myMusicList.length > 0) {
 				this.showLoad = true;
-				this.wavesurfer.load(this.myMusicList[this.mySelIndex].address);
+				console.log("http://47.106.112.13:5000/"+this.myMusicList[this.mySelIndex].address);
+				this.wavesurfer.load("http://47.106.112.13:5000/"+this.myMusicList[this.mySelIndex].address);
 			}
 		},
 		methods: {
@@ -148,7 +153,7 @@
 				this.$store.dispatch('setMySelIndex', index)
 			},
 			deleteMusic: function(type, index) {
-				this.$store.dispatch("delMyMusic", index);
+				this.$store.dispatch("delMyMusic", {"musicId":this.myMusicList[index].id,"index":index});
 				this.wavesurfer.empty();
 			},
 			backCreate: function() {
@@ -168,7 +173,8 @@
 			mySelIndex: function() {
 				if(this.mySelIndex >= 0) {
 					this.showLoad = true;
-					this.wavesurfer.load(this.myMusicList[this.mySelIndex].address);
+					console.log("http://47.106.112.13:5000/"+this.myMusicList[this.mySelIndex].address);
+					this.wavesurfer.load("http://47.106.112.13:5000/"+this.myMusicList[this.mySelIndex].address);
 				}
 			}
 		}

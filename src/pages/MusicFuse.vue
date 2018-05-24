@@ -60,6 +60,7 @@
 				showSave: false,
 				showLoad:false,
 				textLoad:"",
+				timer:null,
 			}
 		},
 		components:{XHeader, Confirm, Loading},
@@ -92,12 +93,30 @@
 			clickCreate: function(){
 				this.showLoad = true;
 				this.textLoad = "正在生成音乐";
-				this.wavesurfer.load(this.$store.getters.getNew.address);
+				for(var i = 0; i < this.myMusicList.length; i++){
+					if(this.musicName == this.myMusicList[i].name){
+						this.showLoad = true;
+						this.textLoad = "请不要输入已存在的歌曲名";
+						function temp(){
+							this.showLoad = false;
+							clearTimeout(this.timer);
+						}
+						this.timer = setTimeout(temp.bind(this), 2000);
+						return ;
+					}
+				}
+				//多次生成音乐
+				this.$store.dispatch('getNewMusic', {"musicName":this.musicName,"other":this.musicOtherInfo});	
+//				this.musicName = "";
+//				this.musicOtherInfo = "";
+//				this.WaveSurfer.empty();
 			}
 		},
 		computed:{
 			...mapState({
 				audioText: state => state.win.audiotext,
+				isNewMusic: state => state.study.isNewMusic,
+				myMusicList: state => state.mymusic.myMusic,
 			})
 		},
 		beforeDestroy: function(){
@@ -112,6 +131,9 @@
 						path: '/CreatePage'
 					})
 				}
+			if(this.myMusicList.length == 0){
+				this.$store.dispatch("getMusicList");
+			}
 			plus.key.removeEventListener("backbutton", onback);
 			plus.key.addEventListener("backbutton",onback.bind(this));
 			console.log(this.audioText)
@@ -133,7 +155,30 @@
 				this.showLoad = false;
 			}
 			this.wavesurfer.on("ready", ready.bind(this))
+			function finishPlay(){
+				this.playtext = this.wavesurfer.isPlaying() ? "暂停" : "播放";
+			}
+			this.wavesurfer.on('finish', finishPlay.bind(this));
 		},
+		watch:{
+			isNewMusic:function(){
+				if(this.$store.getters.getIsNewMusic == 'true'){
+					console.log("http://47.106.112.13:5000/"+this.$store.getters.getNew.address);
+					this.wavesurfer.load("http://47.106.112.13:5000/"+this.$store.getters.getNew.address);
+//					this.wavesurfer.load(this.$store.getters.getNew.address);
+					this.$store.dispatch("setIsNewSuccess", "reset");
+				}
+				else if(this.$store.getters.getIsNewMusic == "newfalse"){
+					this.showLoad = true;
+					this.textLoad = "歌曲生成失败，请稍后重试";
+					function temp(){
+						this.showLoad = false;
+						clearTimeout(this.timer);
+					}
+					this.timer = setTimeout(temp.bind(this), 2000);
+				}
+			}
+		}
 	}
 </script>
 

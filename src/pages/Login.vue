@@ -84,8 +84,8 @@
 				if( this.loginStatus ){
 					this.show2 = false;
 					this.$router.push({
-					path: '/CreatePage'
-				})
+						path: '/CreatePage'
+					})
 				}
 			}
 		}

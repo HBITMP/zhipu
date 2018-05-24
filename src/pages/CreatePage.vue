@@ -96,6 +96,7 @@
 				showSysMusicSelect: false,
 				showSelect: false,
 				selFile: "",
+				timer:null,
 			}
 		},
 		components: {
@@ -124,6 +125,31 @@
 				//				this.showSelect = false;
 				var file = this.$refs.fileUpload.files[0];
 				var music;
+				console.log(file);
+				//去除非mid文件
+				if(file.type != "audio/midi") {
+					this.showLoad = true;
+					this.textLoad = "不允许上传非mid文件";
+					function temp (){
+						this.showLoad = false;
+						clearTimeout(this.timer);
+					}
+					this.timer = setTimeout(temp.bind(this),2000);
+					return ;
+				}
+				//去除重复文件
+				for(var i = 0 ;i < this.musicList.length; i++){
+					if(file.name == this.musicList[i].name){
+						this.showLoad = true;
+						this.textLoad = "请不要重复上传文件";
+						function temp (){
+							this.showLoad = false;
+							clearTimeout(this.timer);
+						}
+						this.timer = setTimeout(temp.bind(this),2000);
+						return ;
+					}
+				}
 				//创建一个FormDate
 				var formData = new FormData();
 				//将文件信息追加到其中
@@ -154,14 +180,16 @@
 			},
 			onCancel: function() {},
 			onConfirm: function() {
-				console.log("触犯确定事件")
 				this.showSysMusicSelect = false;
 			},
 			//选择系统音乐
 			selSys: function() {
 				this.showSelect = false;
 				this.showSysMusicSelect = true;
-				this.$store.dispatch('getSysMusic');
+				if(this.sysMusicList.length <= 0){
+					this.$store.dispatch('getSysMusic');
+				}
+				
 			},
 			//选择本地音乐
 			selLocal: function() {
@@ -188,9 +216,9 @@
 				//提交学习请求
 				this.$store.dispatch('StartStudy', this.musicList);
 				//页面跳转
-				this.$router.push({
-					path: '/StartStudy'
-				})
+//				this.$router.push({
+//					path: '/StartStudy'
+//				})
 			},
 			//添加音乐
 			addMusic: function() {
@@ -243,9 +271,11 @@
 		},
 		computed: {
 			...mapState({
+				sysMusicList: state => state.sysmusic.catelog,
 				musicList: state => state.music.musicInfo,
 				play: state => state.music.isPlaying,
 				successLoad: state => state.music.successLoad,
+				isSuccess: state => state.study.isSuccess,
 				isLoop: state => state.music.isLoop,
 				isRow: state => state.win.isRow,
 			})
@@ -261,8 +291,8 @@
 						path: '/StartCreate'
 					})
 				}
-//			plus.key.removeEventListener("backbutton", onback);
-//			plus.key.addEventListener("backbutton",onback.bind(this));	
+			plus.key.removeEventListener("backbutton", onback);
+			plus.key.addEventListener("backbutton",onback.bind(this));	
 			if(window.plus) {
 				pludReady();
 			} else {
@@ -300,6 +330,25 @@
 					this.showLoad = false;
 				}
 			},
+			isSuccess: function(){
+				if(this.isSuccess == "true"){
+					this.$router.push({
+						path: '/StartStudy'
+					});
+					this.$store.dispatch('setIsSuccessState');
+				}else{
+					this.textLoad = "正在开启学习通道 稍后点击重试",
+					this.showLoad = true;
+					function temp(){
+						this.showLoad = false;
+						clearTimeout(this.timer);
+						//更改获取音乐成功的状态值，以方便再次更改音乐时间
+						this.$store.dispatch('setIsSuccessState');
+					}
+					this.timer = setTimeout(temp.bind(this),2000)
+				}
+
+			}
 		}
 
 	}

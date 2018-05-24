@@ -18,6 +18,9 @@
 			}
 		},
 		computed: {
+			...mapState({
+				musicList: state => state.music.musicInfo,
+			})
 		},
 		created: function(){
 //			this.$nextTick(() => {
@@ -32,6 +35,10 @@
 		},
 		
 		mounted: function(){
+//			if(this.musicList[parseInt(this.index)].wavesurfer != null ){
+//				this.wavesurfer = this.musicList[parseInt(this.index)].wavesurfer;
+//				return ;
+//			}
 			this.wavesurfer = WaveSurfer.create({
 				audioContext: this.childaudio,
 				container: "#"+this.id,
@@ -47,8 +54,8 @@
 			function temp(dispatch){
 				dispatch("addLoad");
 			}
-			this.wavesurfer.load(this.address);
-			this.wavesurfer.on('ready',temp.bind(this, this.$store.dispatch));
+			this.wavesurfer.load("http://47.106.112.13:5000/"+this.address);
+			this.wavesurfer.on('ready', temp.bind(this, this.$store.dispatch));
 
 			function finishPlay(){
 				if( this.$store.getters.getIsLoop ){

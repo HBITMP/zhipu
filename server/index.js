@@ -5,13 +5,21 @@ var md5=require("md5")
 var bodyParser = require('body-parser');
 var app = express();
 
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    res.header("X-Powered-By",' 3.2.1')
+    if(req.method=="OPTIONS") res.send(200);/*让options请求快速返回*/
+    else  next();
+});
 
 let options = {
   setHeaders: function (res, path, stat) {
     res.set('Access-Control-Allow-Origin', '*')
   }
 }
-
+app.use("/",express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -275,22 +283,24 @@ app.get('/system/musics', function(req, res){
 app.post('/createmusic', function(req, res){
 	console.log(req.body)
 	res.json({
-		"status": 200,         //状态码
+		"status": 201,         //状态码
 		"message": "学习失败", //消息
 		"newMusic": false,
 		"time": 12,
 	});
 })
 
-app.get('/getnewmusic', function(req, res){
+app.post('/getnewmusic', function(req, res){
+	console.log(req.body);
 	res.json({
 		status: 200,         //状态码
 		newMusic: true,
 		music:{
 			id: "musicno1",
 			name: "final.mp3",
-			address: 'http://123.207.24.223:3000/final.mp3',
+			address: 'http://localhost:3000/123.mp3',
 			wavesurfer: null,
-		}
+		},
+		time:12,
 	})
 })

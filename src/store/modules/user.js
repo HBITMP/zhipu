@@ -2,8 +2,8 @@ import axios from 'axios';
 
 //数据部分
 const state = {
-	verLoginUrl : 'http://123.207.24.223:3000/user/login',
-	registerUrl : 'http://123.207.24.223:3000/user/register',
+	verLoginUrl : 'http://47.106.112.13:5000/user/login',
+	registerUrl : 'http://47.106.112.13:5000/user/sign',
 	userName : "",
 	userId: "",
 	loginStatus: false,
@@ -45,12 +45,20 @@ const actions = {
 		}).then(function(response){
 			console.log("success")
 			console.log(response)
-			commit({
-				type: 'setLogin',
-				userId: response.userId,
-				username:response.username,
-				status: true,
-			})
+			if(response.data.status == 200){
+				commit({
+					type: 'setLogin',
+					userId: response.data.userid,
+					username:response.data.username,
+					status: true,
+				})
+			} else {
+				commit({
+					type: 'setLoginFailed',
+					status: false,
+				})
+			}
+			
 		}).catch(function(err){
 			console.log(err)
 			commit({
@@ -63,7 +71,7 @@ const actions = {
 	 * 注册验证
 	 */
 		register({commit}, data){
-		axios.post(state.verLoginUrl,{
+		axios.post(state.registerUrl,{
 			username: data.username,
 			userpwd: data.userpwd,
 			email: data.email,

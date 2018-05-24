@@ -2,8 +2,9 @@
 const state = {
 	//横屏状态为true, 竖屏为false
 	isRow:false,
-	uploadUrl:'http://123.207.24.223:3000/upload',
+	uploadUrl:'http://47.106.112.13:5000/upload',
 	audiotext: null,
+	musicurl:"http://47.106.112.13:5000",
 }
 
 //操作部分
@@ -37,6 +38,9 @@ const actions = {
 const getters = {  // getters
     getUploadUrl: function (state) {
         return state.uploadUrl;
+    },
+    getFinaUrl: function (state) {
+        return state.musicurl;
     },
 }
 
