@@ -1,4 +1,4 @@
-![title](/api/file/getImage?fileId=5b082e67fa9b697d02000132) 
+![title](http://123.207.24.223:9000/api/file/getImage?fileId=5b082e67fa9b697d02000132) 
 # 智谱
 > 智能辅助谱曲app
 
