@@ -1,9 +1,10 @@
-# zhipu
-
+![title](/api/file/getImage?fileId=5b082e67fa9b697d02000132) 
+# 智谱
 > 智能辅助谱曲app
 
-# 有关app的相关文档
-* [页面流程图[app设计页面流程图](http://123.207.24.223:9000/blog/cate/hbitmp/contest)  
+# APP的相关文档
+* 页面流程图[app设计页面流程图](http://123.207.24.223:9000/blog/cate/hbitmp/contest)  
+* [相关开源API使用文档](http://123.207.24.223:9000/blog/post/hbitmp/react-native%E6%95%B0%E6%8D%AE%E4%BA%A4%E4%BA%92%E8%A7%84%E8%8C%83%EF%BC%9A)
 *   
 
 ## Build Setup
